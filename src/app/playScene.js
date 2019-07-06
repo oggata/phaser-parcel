@@ -24,7 +24,7 @@ export default {
     this.load.image("gameover", require("../assets/sprites/gameover.png"));
     this.load.image("meat", require("../assets/sprites/meat.png"));
 
-    this.load.spritesheet("doux", require("../assets/sprites/kyo5.png"), {
+    this.load.spritesheet("doux", require("../assets/sprites/pte1.png"), {
       frameWidth: 340,
       frameHeight: 340
     });
