@@ -75,6 +75,7 @@ this.background2.setVisible(true);
 this.background1.setVisible(true);
 
     
+
     this.physics.add.existing(this.ground);
     this.ground.body.immovable = true;
     this.ground.body.moves = false;

@@ -4,10 +4,19 @@ export default {
   key: "boot",
 
   preload: function() {
-    this.load.image("sky", require("../assets/sky.png"));
-    this.load.image("ground", require("../assets/platform.png"));
+
+    this.load.image("background1", require("../assets/background/back1.png"));
+    this.load.image("background2", require("../assets/background/back2.png"));
+    this.load.image("background3", require("../assets/background/back3.png"));
+    this.load.image("background4", require("../assets/background/back4.png"));
+    this.load.image("background5", require("../assets/background/back5.png"));
+
+    this.load.image("title", require("../assets/background/title.png"));
+    //title
+    //this.load.image("sky", require("../assets/sky.png"));
+    //this.load.image("ground", require("../assets/platform.png"));
     this.load.image("star", require("../assets/star.png"));
-    this.load.image("bomb", require("../assets/bomb.png"));
+    //this.load.image("bomb", require("../assets/bomb.png"));
     this.load.spritesheet("dude", require("../assets/dude.png"), {
       frameWidth: 32,
       frameHeight: 48
