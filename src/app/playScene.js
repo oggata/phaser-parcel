@@ -30,7 +30,7 @@ export default {
     //this.load.image("background5", require("../assets/background/back55.png"));
     this.load.image("platform", require("../assets/background/platform.png"));
     this.load.image("restart", require("../assets/sprites/restart.png"));
-    this.load.image("gameover", require("../assets/sprites/gameover.png"));
+    this.load.image("gameover", require("../assets/background/gameover.png"));
 
 
     this.load.spritesheet("fire", require("../assets/sprites/pipo-btleffect036.png"), {
@@ -86,13 +86,9 @@ this.background1.setVisible(true);
     this.player.setBounce(0.2);
     this.player.setCollideWorldBounds(true);
     this.player.setScale(1);
-    //this.player.setPipeline('Light2D');
-    //var light  = this.lights.addLight(500, 250, 200);
-    //this.lights.enable().setAmbientColor(0x555555);
-//this.player.setSize(100, 100, 0, 0);
-    //this.player.setSize(200, 200, 0, 0);
-    //this.player.setOrigin(0, -0.5);
-//this.player.setAngle(90);
+    this.player.setSize(100, 180, true);
+    this.player.setOffset(130,140);
+    //this.player.setAngle(90);
 
     this.meats = this.physics.add.group();
     this.bombs = this.physics.add.group();
@@ -101,9 +97,8 @@ this.background1.setVisible(true);
 
     this.playerJumpCnt = 0;
 
-
-    this.timedEvent = this.time.addEvent({
-      delay: 3000,
+    this.timedEvent1 = this.time.addEvent({
+      delay: 1000,
       callback: onEventFire,
       callbackScope: this,
       loop: true
@@ -116,81 +111,35 @@ this.background1.setVisible(true);
       loop: true
     });
 
-    /*
-    this.timedEvent1 = this.time.addEvent({
-      delay: 3000,
-      callback: onEvent1,
-      callbackScope: this,
-      loop: true
-    });
-*/
-
-    /*
-    let music = this.sound.add("music");
-    music.setLoop(true);
-    music.play();
-*/
-
-    /*
-    function onEvent() {
-      this.timedEvent.reset({
-        delay: Phaser.Math.Between(1000, 5000),
-        callback: onEvent,
-        callbackScope: this,
-        loop: true
-      });
-      let meat = this.meats.create(800, Phaser.Math.Between(200, 485), "meat");
-      meat.setScale(this.meatScale);
-      meat.setCircle(6.5);
-      meat.setBounceY(Phaser.Math.FloatBetween(0.6, 1.2));
-      this.meats.setVelocityX(Phaser.Math.Between(-1000, -300));
-    }
-
-
-    function onEvent1() {
-      this.timedEvent1.reset({
-        delay: Phaser.Math.Between(3000, 5000),
-        callback: onEvent1,
-        callbackScope: this,
-        loop: true
-      });
-      let bomb = this.bombs.create(800, Phaser.Math.Between(300, 485), "bomb");
-      bomb.setScale(this.bombScale);
-      bomb.setCircle(5);
-      bomb.anims.play("boom", true);
-      bomb.setBounceY(1.2);
-      this.bombs.setVelocityX(Phaser.Math.Between(-1000, -300));
-    }
-*/
     function onEventEnemy() {
       this.timedEvent2.reset({
-        delay: 5000,
+        delay: 2500,
         callback: onEventEnemy,
         callbackScope: this,
         loop: true
       });
-      let enemy = this.enemies.create(1000, 120, "enemy");
+      let enemy = this.enemies.create(1000, Phaser.Math.Between(120 ,500), "enemy");
       enemy.setScale(0.5);
       enemy.body.setAllowGravity(false)
       enemy.anims.play("enemy_run", true);
-      this.enemies.setVelocityX(-200);
+      enemy.setSize(120, 120, true);
+      enemy.setOffset(100,140);
+      this.enemies.setVelocityX(Phaser.Math.Between(-200 ,-500));
     }
 
     function onEventFire() {
-      this.timedEvent.reset({
+      this.timedEvent1.reset({
         delay: Phaser.Math.Between(1000, 4000),
         callback: onEventFire,
         callbackScope: this,
         loop: true
       });
       //let fire = this.fires.create(200, 150, "meat");
-      let fire = this.fires.create(this.player.x, this.player.y, "fire");
+      let fire = this.fires.create(this.player.x + 120, this.player.y + 50, "fire");
       fire.setScale(0.8);
       fire.setCircle(5);
       fire.anims.play("fire", true);
-
-fire.setSize(70, 70, 0, 0);
-
+      fire.setSize(70, 70, 0, 0);
       fire.setBounceY(1.2);
       this.fires.setVelocityX(500);
       this.fires.setVelocityY(-500);
@@ -210,14 +159,6 @@ fire.setSize(70, 70, 0, 0);
       repeat: -1
     });
 
-/*
-    this.anims.create({
-      key: "hurt",
-      frames: this.anims.generateFrameNumbers("doux", { start: 0, end: 3 }),
-      frameRate: 10,
-      repeat: -1
-    });
-*/
     this.anims.create({
       key: "boom",
       frames: this.anims.generateFrameNumbers("bomb", { start: 0, end: 3 }),
@@ -236,35 +177,39 @@ fire.setSize(70, 70, 0, 0);
       meat.destroy();
       //let pickup = this.sound.add("pickup");
       //pickup.play();
-      this.score += 100;
-      this.scoreText.setText("SCORE: " + this.score);
+      //this.score += 100;
+      //this.scoreText.setText("SCORE: " + this.score);
     }
 
-    function hitBomb(player, bomb) {
-      bomb.destroy();
+    function hitEnemy(enemy, fire) {
+        enemy.destroy();
+        fire.destroy();
+        this.score += 100;
+        this.scoreText.setText("SCORE: " + this.score);
+    }
+
+    function hitPlayer(player, enemy) {
+      enemy.destroy();
       //music.stop();
       //let death = this.sound.add("death");
       //death.play();
       this.physics.pause();
       this.isGameOver = true;
-      this.timedEvent.paused = true;
       this.timedEvent1.paused = true;
+      this.timedEvent2.paused = true;
       this.player.setTint(0xff0000);
-      this.player.anims.play("hurt");
-      let restart = this.add.image(400, 350, "restart");
-      restart.setScale(4);
+      //this.player.anims.play("hurt");
+      let restart = this.add.image(400, 300, "gameover");
       restart.setInteractive();
       restart.on("pointerdown", () => {
-        document.getElementById("topusers").innerHTML = "";
-        this.scene.start("GameScene");
+        //document.getElementById("topusers").innerHTML = "";
+        this.scene.start("play");
         this.isGameOver = false;
         this.score = 0;
       });
       restart.on("pointerover", () => restart.setTint(0xcccccc));
       restart.on("pointerout", () => restart.setTint(0xffffff));
-      this.gameover = this.add.image(400, 180, "gameover");
-      this.gameover.setScale(1.2);
-      //let user_id = localStorage.getItem("user_id");
+      //this.gameover = this.add.image(400, 300, "gameover");
     }
 
     this.scoreText = this.add.text(16, 16, "SCORE: 0", {
@@ -273,13 +218,19 @@ fire.setSize(70, 70, 0, 0);
     });
 
     this.physics.add.collider(this.player, this.ground);
-    this.physics.add.collider(this.meats, this.ground);
+    //this.physics.add.collider(this.meats, this.ground);
     this.physics.add.collider(this.enemies, this.ground);
     this.physics.add.collider(this.bombs, this.ground);
     this.physics.add.collider(this.fires, this.ground);
-    this.physics.add.collider(this.player, this.enemies);
-    this.physics.add.overlap(this.player, this.meats, collectMeat, null, this);
-    this.physics.add.collider(this.player, this.bombs, hitBomb, null, this);
+    
+
+    //this.physics.add.collider(this.player, this.enemies);
+    //this.physics.add.overlap(this.player, this.meats, collectMeat, null, this);
+
+
+    this.physics.add.collider(this.player, this.enemies, hitPlayer, null, this);
+    this.physics.add.collider(this.enemies, this.fires, hitEnemy, null, this);
+
     this.cameras.main.startFollow(this.player, true, 0.05, 0.05);
     this.cameras.main.setBounds(0, 0, 800, 600);
   },
@@ -296,8 +247,8 @@ for(var i=0;i<=this.enemies.length;i++){
 
     //console.log(this.player.y);
     if (this.isGameOver === false) {
-      this.score += 1;
-      this.scoreText.setText("SCORE: " + this.score);
+      //this.score += 1;
+      //this.scoreText.setText("SCORE: " + this.score);
 
       let cursors = this.input.keyboard.createCursorKeys();
       this.player.anims.play("run", true);
@@ -329,8 +280,6 @@ for(var i=0;i<=this.enemies.length;i++){
     this.background3.tilePositionX += 1/2;
     this.background4.tilePositionX += 1/5;
     this.background5.tilePositionX += 1/5;
-
-
 
     this.ground.tilePositionX += 1;
   }
