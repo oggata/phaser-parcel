@@ -119,7 +119,7 @@ this.background1.setVisible(true);
         loop: true
       });
       let enemy = this.enemies.create(1000, Phaser.Math.Between(120 ,500), "enemy");
-      enemy.setScale(0.5);
+      enemy.setScale(0.7);
       enemy.body.setAllowGravity(false)
       enemy.anims.play("enemy_run", true);
       enemy.setSize(120, 120, true);
@@ -154,7 +154,7 @@ this.background1.setVisible(true);
 
     this.anims.create({
       key: "enemy_run",
-      frames: this.anims.generateFrameNumbers("enemy", { start: 0, end: 0 }),
+      frames: this.anims.generateFrameNumbers("enemy", { start: 0, end: 6 }),
       frameRate: 10,
       repeat: -1
     });
@@ -228,8 +228,8 @@ this.background1.setVisible(true);
     //this.physics.add.overlap(this.player, this.meats, collectMeat, null, this);
 
 
-    this.physics.add.collider(this.player, this.enemies, hitPlayer, null, this);
-    this.physics.add.collider(this.enemies, this.fires, hitEnemy, null, this);
+    //this.physics.add.collider(this.player, this.enemies, hitPlayer, null, this);
+    //this.physics.add.collider(this.enemies, this.fires, hitEnemy, null, this);
 
     this.cameras.main.startFollow(this.player, true, 0.05, 0.05);
     this.cameras.main.setBounds(0, 0, 800, 600);
