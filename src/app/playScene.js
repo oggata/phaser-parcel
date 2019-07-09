@@ -60,13 +60,17 @@ export default {
   create() {
     
     //this.background5 = this.add.tileSprite(400, 300, 1000, 600, "background5");
-    this.background5 = this.add.tileSprite(400, 300, 1600, 600, "background5");
-    this.background4 = this.add.tileSprite(400, 300, 1600, 600, "background4");
-    this.background3 = this.add.tileSprite(400, 300, 1600, 600, "background3");
-    this.background2 = this.add.tileSprite(400, 300, 1600, 600, "background2");
+    this.background5 = this.add.tileSprite(400, 300, 667, 250, "background5");
+    this.background4 = this.add.tileSprite(400, 300, 667, 250, "background4");
+    this.background3 = this.add.tileSprite(400, 300, 667, 250, "background3");
+    this.background2 = this.add.tileSprite(400, 300, 667, 250, "background2");
     this.ground = this.add.tileSprite(400, 600, 800, 100, "platform");
     this.background1 = this.add.tileSprite(400, 300, 1600, 600, "background1");
 
+this.background5.setScale(2);
+this.background4.setScale(2);
+this.background3.setScale(2);
+this.background2.setScale(2);
 
 this.background5.setVisible(true);
 this.background4.setVisible(true);

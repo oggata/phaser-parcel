@@ -5,12 +5,18 @@ export default {
 
   create: function() {
 
-    this.add.image(400, 300, "background5");
-    this.add.image(400, 300, "background4");
-    this.add.image(400, 300, "background3");
-    this.add.image(400, 300, "background2");
-    this.add.image(400, 300, "background1");
+    this.background5 =this.add.image(400, 300, "background5");
+    this.background4 =this.add.image(400, 300, "background4");
+    this.background3 =this.add.image(400, 300, "background3");
+    this.background2 =this.add.image(400, 300, "background2");
+    this.background1 =this.add.image(400, 300, "background1");
     //this.add.image(400, 300, "title");
+
+
+this.background5.setScale(2);
+this.background4.setScale(2);
+this.background3.setScale(2);
+this.background2.setScale(2);
 
 
 
