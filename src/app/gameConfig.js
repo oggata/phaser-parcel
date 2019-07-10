@@ -30,9 +30,16 @@ let config = {
 
 export default {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  parent: "canvas",
+scale: {
+        mode: Phaser.Scale.FIT,
+        parent: 'canvas',
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 800,
+        height: 600
+    },
+  //width: 800,
+  //height: 600,
+  //parent: "canvas",
   pixelArt: true,
   title: "Phaser 3 with Parcel 📦",
   url: "https://github.com/samme/phaser-parcel",
@@ -44,7 +51,7 @@ export default {
     default: "arcade",
     arcade: {
       gravity: {
-        y: 1000
+        y: 980
       },
       debug: true
     }

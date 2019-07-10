@@ -25,33 +25,20 @@ export default {
     this.load.image("background3", require("../assets/background/back3.png"));
     this.load.image("background4", require("../assets/background/back4.png"));
     this.load.image("background5", require("../assets/background/back5.png"));
-
-
-    //this.load.image("background5", require("../assets/background/back55.png"));
     this.load.image("platform", require("../assets/background/platform.png"));
-    this.load.image("restart", require("../assets/sprites/restart.png"));
     this.load.image("gameover", require("../assets/background/gameover.png"));
-
-
     this.load.spritesheet("fire", require("../assets/sprites/pipo-btleffect036.png"), {
       frameWidth: 120,
       frameHeight: 120
     });
-
     this.load.spritesheet("enemy", require("../assets/sprites/enemy.png"), {
       frameWidth: 340,
       frameHeight: 340
     });
-
     this.load.spritesheet("doux", require("../assets/sprites/kyo5.png"), {
       frameWidth: 340,
       frameHeight: 340
     });
-    this.load.spritesheet("bomb", require("../assets/sprites/bombs.png"), {
-      frameWidth: 14.5,
-      frameHeight: 12
-    });
-
     //this.load.audio("music", "assets/music.mp3");
     //this.load.audio("death", "assets/death.mp3");
     //this.load.audio("pickup", "assets/pickup.wav");

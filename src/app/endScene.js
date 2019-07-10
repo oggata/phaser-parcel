@@ -3,7 +3,7 @@ export default {
   key: 'end',
 
   create: function () {
-    this.add.image(400, 150, 'bomb').setScale(5);
+    //this.add.image(400, 150, 'bomb').setScale(5);
     this.add.text(400, 300, 'Game Over\n\n(menu)', {
       align: 'center',
       fill: 'red',
