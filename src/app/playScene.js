@@ -19,6 +19,7 @@ export default {
     this.timedEvent2 = null;
     this.timedEvent3 = null;
     this.timedEvent4 = null;
+    this.backgroundSpeed = 1;
 
     this.load.image("background1", require("../assets/background/back1.png"));
     this.load.image("background2", require("../assets/background/back2.png"));
@@ -31,6 +32,12 @@ export default {
       frameWidth: 120,
       frameHeight: 120
     });
+
+    this.load.spritesheet("enemy_fire", require("../assets/sprites/pipo-btleffect037.png"), {
+      frameWidth: 120,
+      frameHeight: 120
+    });
+
     this.load.spritesheet("enemy", require("../assets/sprites/enemy.png"), {
       frameWidth: 340,
       frameHeight: 340
@@ -65,12 +72,9 @@ this.background3.setVisible(true);
 this.background2.setVisible(true);
 this.background1.setVisible(true);
 
-    
-
     this.physics.add.existing(this.ground);
     this.ground.body.immovable = true;
     this.ground.body.moves = false;
-
 
     this.player = this.physics.add.sprite(100, 100, "doux");
     this.player.getBounds();
@@ -85,19 +89,28 @@ this.background1.setVisible(true);
     this.bombs = this.physics.add.group();
     this.enemies = this.physics.add.group();
     this.fires = this.physics.add.group();
+    this.enemyFires = this.physics.add.group();
 
     this.playerJumpCnt = 0;
 
+/*
     this.timedEvent1 = this.time.addEvent({
       delay: 1000,
       callback: onEventFire,
       callbackScope: this,
       loop: true
     });
-
+*/
     this.timedEvent2 = this.time.addEvent({
       delay: 1000,
       callback: onEventEnemy,
+      callbackScope: this,
+      loop: true
+    });
+
+    this.timedEvent3 = this.time.addEvent({
+      delay: 1000,
+      callback: onEventEnemyFire,
       callbackScope: this,
       loop: true
     });
@@ -125,20 +138,53 @@ this.background1.setVisible(true);
         callbackScope: this,
         loop: true
       });
-      //let fire = this.fires.create(200, 150, "meat");
       let fire = this.fires.create(this.player.x + 120, this.player.y + 50, "fire");
       fire.setScale(0.8);
       fire.setCircle(5);
       fire.anims.play("fire", true);
       fire.setSize(70, 70, 0, 0);
-      fire.setBounceY(1.2);
+      //fire.setBounceY(1.2);
       this.fires.setVelocityX(500);
       this.fires.setVelocityY(-500);
     }
 
+
+    function onEventEnemyFire() {
+      this.timedEvent3.reset({
+        delay: Phaser.Math.Between(1000, 1001),
+        callback: onEventEnemyFire,
+        callbackScope: this,
+        loop: true
+      });
+
+
+
+for(var i=0;i<this.enemies.children.entries.length;i++){
+  //console.log(this.enemies.children.entries[i].y);
+    if(this.enemies.children.entries[i].x >= 0){
+          let enemyFire = this.enemyFires.create(this.enemies.children.entries[i].x,this.enemies.children.entries[i].y, "enemy_fire");
+          enemyFire.setScale(0.8);
+          enemyFire.setCircle(5);
+          enemyFire.anims.play("enemy_fire", true);
+          enemyFire.setSize(70, 70, 0, 0);
+          this.enemyFires.setVelocityX(-200);
+    }
+}
+
+
+    }
+
+
     this.anims.create({
       key: "run",
       frames: this.anims.generateFrameNumbers("doux", { start: 0, end: 5 }),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: "death",
+      frames: this.anims.generateFrameNumbers("doux", { start: 6, end: 6 }),
       frameRate: 10,
       repeat: -1
     });
@@ -164,13 +210,12 @@ this.background1.setVisible(true);
       repeat: -1
     });
 
-    function collectMeat(player, meat) {
-      meat.destroy();
-      //let pickup = this.sound.add("pickup");
-      //pickup.play();
-      //this.score += 100;
-      //this.scoreText.setText("SCORE: " + this.score);
-    }
+    this.anims.create({
+      key: "enemy_fire",
+      frames: this.anims.generateFrameNumbers("enemy_fire", { start: 0, end: 6 }),
+      frameRate: 10,
+      repeat: -1
+    });
 
     function hitEnemy(enemy, fire) {
         enemy.destroy();
@@ -179,17 +224,48 @@ this.background1.setVisible(true);
         this.scoreText.setText("SCORE: " + this.score);
     }
 
+    function hitPlayer2(player, enemyFire) {
+
+
+      this.isGameOver = true;
+      
+      //this.timedEvent1.paused = true;
+      this.timedEvent2.paused = true;
+      this.timedEvent3.paused = true;
+      
+      
+      this.player.anims.play("death");
+      this.backgroundSpeed = 0;
+      this.ground.tilePositionX += 1;
+      let restart = this.add.image(400, 300, "gameover");
+      restart.setInteractive();
+      restart.on("pointerdown", () => {
+        this.scene.start("play");
+        this.isGameOver = false;
+        this.score = 0;
+      });
+      restart.on("pointerover", () => restart.setTint(0xcccccc));
+      restart.on("pointerout", () => restart.setTint(0xffffff));
+      
+    }
+
     function hitPlayer(player, enemy) {
       enemy.destroy();
       //music.stop();
       //let death = this.sound.add("death");
       //death.play();
-      this.physics.pause();
+      //this.physics.pause();
       this.isGameOver = true;
-      this.timedEvent1.paused = true;
+      //this.timedEvent1.paused = true;
       this.timedEvent2.paused = true;
-      this.player.setTint(0xff0000);
-      //this.player.anims.play("hurt");
+      this.timedEvent3.paused = true;
+      //this.player.setTint(0xff0000);
+      this.player.anims.play("death");
+      this.backgroundSpeed = 0;
+
+
+    this.ground.tilePositionX += 1;
+
       let restart = this.add.image(400, 300, "gameover");
       restart.setInteractive();
       restart.on("pointerdown", () => {
@@ -209,32 +285,36 @@ this.background1.setVisible(true);
     });
 
     this.physics.add.collider(this.player, this.ground);
-    //this.physics.add.collider(this.meats, this.ground);
     this.physics.add.collider(this.enemies, this.ground);
     this.physics.add.collider(this.bombs, this.ground);
     this.physics.add.collider(this.fires, this.ground);
-    
-
-    //this.physics.add.collider(this.player, this.enemies);
-    //this.physics.add.overlap(this.player, this.meats, collectMeat, null, this);
-
-
-    //this.physics.add.collider(this.player, this.enemies, hitPlayer, null, this);
-    //this.physics.add.collider(this.enemies, this.fires, hitEnemy, null, this);
+    //this.physics.add.collider(this.enemyFires, this.ground);
+    this.physics.add.collider(this.player, this.enemies, hitPlayer, null, this);
+    this.physics.add.collider(this.enemies, this.fires, hitEnemy, null, this);
+    this.physics.add.collider(this.player,this.enemyFires,hitPlayer2,null, this);
 
     this.cameras.main.startFollow(this.player, true, 0.05, 0.05);
     this.cameras.main.setBounds(0, 0, 800, 600);
   },
 
+
+
+
+
+
+
   update() {
-
-for(var i=0;i<=this.enemies.length;i++){
-  console.log(this.enemies[i].y);
-  this.enemies[i].setVelocityY(-200);
-}
-
-
     this.playerJumpCnt += 1;
+
+
+//console.log(this.enemies.children.entries.length);
+
+for(var i=0;i<this.enemies.children.entries.length;i++){
+  console.log(this.enemies.children.entries[i].y);
+  //console.log(this.player.y);
+
+
+}
 
     //console.log(this.player.y);
     if (this.isGameOver === false) {
@@ -266,13 +346,12 @@ for(var i=0;i<=this.enemies.length;i++){
     }
 
 
-    this.background1.tilePositionX += 2;
-    this.background2.tilePositionX += 1;
-    this.background3.tilePositionX += 1/2;
-    this.background4.tilePositionX += 1/5;
-    this.background5.tilePositionX += 1/5;
-
-    this.ground.tilePositionX += 1;
+    this.background1.tilePositionX += this.backgroundSpeed*2;
+    this.background2.tilePositionX += this.backgroundSpeed;
+    this.background3.tilePositionX += this.backgroundSpeed/2;
+    this.background4.tilePositionX += this.backgroundSpeed/5;
+    this.background5.tilePositionX += this.backgroundSpeed/5;
+    this.ground.tilePositionX += this.backgroundSpeed;
   }
 };
 
